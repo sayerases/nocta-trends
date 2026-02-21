@@ -1,0 +1,47 @@
+<!-- Favorites -->
+<div class="page-title" style="margin-bottom:8px;">Сохраненные референсы</div>
+<div style="color:var(--text-muted); margin-bottom:24px;">Ваша личная библиотека вирусных идей. Сохранено в базе данных.
+</div>
+
+{% if not favorites %}
+<div class="empty-state" style="text-align:center; padding:100px 20px;">
+    <svg style="width:64px;height:64px;color:rgba(255,255,255,0.1);margin-bottom:20px;" viewBox="0 0 24 24"
+        fill="currentColor">
+        <path
+            d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+    </svg>
+    <div style="font-size:20px; font-weight:600; color:var(--text-muted);">Нет избранных видео</div>
+    <div style="font-size:14px; color:rgba(255,255,255,0.4); margin-top:8px;">Сохраняйте Reels нажав на сердечко</div>
+</div>
+{% else %}
+<div class="video-grid">
+    {% for video in favorites %}
+    {% set safe_video = video|tojson|forceescape %}
+    <div class="video-card" onclick="openVideoModal('{{ safe_video }}')">
+        <div class="thumb-wrap">
+            <img class="thumb-img" src="{{ video.thumbnail_url }}" alt="Thumbnail">
+            <button class="ai-btn-overlay" onclick="event.stopPropagation(); openVideoModal('{{ safe_video }}')">✨
+                Анализ</button>
+            <div class="card-overlay">
+                <div class="author-tag">@{{ video.author }}</div>
+                <div class="card-stats">
+                    <div class="stat-item"><svg class="icon">
+                            <path
+                                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zm0 10.5c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3z" />
+                        </svg> {{ video.views|format_num }}</div>
+                </div>
+            </div>
+        </div>
+        <button class="btn active"
+            style="position:absolute; bottom:10px; right:10px; padding:6px; background:rgba(0,0,0,0.5); color:var(--danger); border:none;"
+            data-video="{{ safe_video }}"
+            onclick="toggleFavorite(event, this); if(!this.classList.contains('active')) this.closest('.video-card').remove();">
+            <svg class="icon">
+                <path
+                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+            </svg>
+        </button>
+    </div>
+    {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,72 @@
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div class="flex justify-between items-end">
+        <div>
+            <h2 class="text-3xl font-bold">User Intelligence Profile</h2>
+            <p class="text-gray-400 mt-1 uppercase text-[10px] font-bold tracking-widest">Manage your Nocta identity</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div class="col-span-2 glass p-10 rounded-[2.5rem] border border-white/5 space-y-8">
+            <div class="flex items-center gap-6">
+                <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-[#FF8C00] to-[#7851A9] p-1">
+                    <div
+                        class="w-full h-full rounded-full bg-[#050505] flex items-center justify-center font-bold text-3xl text-gray-300">
+                        A</div>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-bold">Nocta Admin</h3>
+                    <p class="text-[#FF8C00] text-xs font-bold uppercase tracking-widest">Professional Tier License</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Subscription
+                        Status</label>
+                    <div class="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between">
+                        <span class="text-sm font-medium">Active</span>
+                        <span class="text-[10px] text-gray-500">Renews in 12 days</span>
+                    </div>
+                </div>
+                <div class="space-y-2">
+                    <label class="text-[10px] font-bold uppercase tracking-widest text-gray-500">Intelligence
+                        Quota</label>
+                    <div class="p-4 rounded-2xl bg-white/5 border border-white/5 flex items-center justify-between">
+                        <span class="text-sm font-medium">1,240 / 5,000</span>
+                        <div class="w-20 h-1.5 bg-gray-800 rounded-full overflow-hidden">
+                            <div class="w-1/4 h-full bg-[#FF8C00]"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pt-4 flex gap-4">
+                <button
+                    onclick="alert('Settings modal coming soon.\nIf you want real data, add INSTAGRAM_USER, INSTAGRAM_PASS, and HTTP_PROXY to your .env file in the root directory.')"
+                    class="px-6 py-3 bg-[#FF8C00] rounded-xl font-bold text-xs uppercase tracking-widest transition-all hover:bg-orange-600">Settings</button>
+                <button onclick="alert('Signed out successfully. Redirecting to login... (Mock)')"
+                    class="px-6 py-3 glass rounded-xl font-bold text-xs uppercase tracking-widest border border-white/5 hover:bg-white/5 transition-all">Sign
+                    Out</button>
+            </div>
+        </div>
+
+        <div class="glass p-10 rounded-[2.5rem] border border-white/5 space-y-6">
+            <h4 class="font-bold text-lg">System Health</h4>
+            <div class="space-y-4">
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">Instagram Scraper</span>
+                    <span class="text-green-500 font-bold uppercase text-[10px]">Optimal</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">Gemini 1.5 Pro</span>
+                    <span class="text-green-500 font-bold uppercase text-[10px]">Optimal</span>
+                </div>
+                <div class="flex justify-between items-center text-sm">
+                    <span class="text-gray-500">Radar Scheduler</span>
+                    <span class="text-green-500 font-bold uppercase text-[10px]">Optimal</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

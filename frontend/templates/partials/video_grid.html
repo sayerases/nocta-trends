@@ -1,0 +1,76 @@
+{% if empty_msg %}
+<div style="grid-column:1/-1;text-align:center;padding:100px 20px;">
+    <svg style="width:64px;height:64px;color:rgba(255,255,255,0.1);margin-bottom:20px;" viewBox="0 0 24 24"
+        fill="currentColor">
+        <path
+            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+    </svg>
+    <div style="font-size:20px; font-weight:600; color:var(--text-main);">{{ empty_msg }}</div>
+</div>
+{% elif not videos and page == 1 %}
+<div style="grid-column:1/-1;text-align:center;padding:100px 20px;">
+    <div style="font-size:20px; font-weight:600; color:var(--text-muted);">Ничего не найдено</div>
+</div>
+{% endif %}
+
+{% if page == 1 %}
+<div class="video-grid" id="main-grid">
+    {% endif %}
+    {% for video in videos %}
+    {% set safe_video = video|tojson|forceescape %}
+    <div class="video-card" onclick="openVideoModal('{{ safe_video }}')">
+
+        <div class="thumb-wrap">
+            <img class="thumb-img" src="{{ video.thumbnail_url }}" alt="Thumbnail" loading="lazy"
+                onerror="this.src='https://via.placeholder.com/300x500/151822/ffffff?text=Video'">
+
+            {% if video.engagement_rate and video.engagement_rate > 3.0 %}
+            <div class="header-badge" style="background:var(--accent);">VIRAL {{ video.engagement_rate }}%</div>
+            {% endif %}
+
+            <!-- Hover overlay -->
+            <button class="ai-btn-overlay" onclick="event.stopPropagation(); openVideoModal('{{ safe_video }}')">
+                ✨ Анализ (10 т.)
+            </button>
+
+            <!-- Card stats bottom -->
+            <div class="card-overlay">
+                <div class="author-tag">@{{ video.author }}</div>
+                <div class="card-stats">
+                    <div class="stat-item"><svg class="icon" style="width:14px;height:14px;">
+                            <path
+                                d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z" />
+                        </svg> {{ video.views|format_num }}</div>
+                    <div class="stat-item"><svg class="icon" style="width:14px;height:14px;">
+                            <path
+                                d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+                        </svg> {{ video.likes|format_num }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add to favorites button outside thumb area, or overlay. Let's make it an overlay. -->
+        <button class="btn"
+            style="position:absolute; bottom:10px; right:10px; padding:6px; background:rgba(0,0,0,0.5); border:none; z-index:5;"
+            data-video="{{ safe_video }}" onclick="toggleFavorite(event, this)">
+            <svg class="icon" style="width:18px;height:18px;">
+                <path d="M17 3H7c-1.1 0-1.99.9-1.99 2L5 21l7-3 7 3V5c0-1.1-.9-2-2-2z" />
+            </svg>
+        </button>
+
+    </div>
+    {% endfor %}
+</div>
+
+{% if page == 1 %}
+</div>
+{% endif %}
+
+{% if videos|length > 0 %}
+<div id="scroll-sentinel-{{ page }}" class="scroll-sentinel" style="height:20px; grid-column:1/-1; width: 100%;"></div>
+{% if page == 1 %}
+<div id="loading-spinner" style="display:none; grid-column:1/-1; text-align:center; padding:20px; width:100%;">
+    <div class="spinner" style="margin:0 auto;"></div>
+</div>
+{% endif %}
+{% endif %}

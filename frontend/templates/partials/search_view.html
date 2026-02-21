@@ -1,0 +1,27 @@
+<!-- Search Page Shell -->
+<div class="filter-bar">
+    <div class="search-box">
+        <svg class="icon" style="color:var(--text-muted)">
+            <path
+                d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+        </svg>
+        <input type="text" id="main-search-input" placeholder="Введите запрос или хештег..." value="{{ query or '' }}"
+            onkeydown="if(event.key==='Enter') reloadSearchGrid()">
+    </div>
+    <select class="input-field" id="time-select" style="width:180px;" onchange="reloadSearchGrid()">
+        <option value="all">За всё время</option>
+        <option value="7d">Последние 7 дней</option>
+        <option value="3d">Последние 3 дня</option>
+        <option value="1d">Последние 24 часа</option>
+    </select>
+    <select class="input-field" id="sort-select" style="width:180px;" onchange="reloadSearchGrid()">
+        <option value="views">По просмотрам</option>
+        <option value="likes">По лайкам</option>
+        <option value="er">По ER (вовлеченность)</option>
+    </select>
+    <button class="btn btn-primary" onclick="reloadSearchGrid()">Искать (2 т.)</button>
+</div>
+
+<div id="video-grid-container">
+    {% include "partials/video_grid.html" %}
+</div>

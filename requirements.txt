@@ -1,0 +1,12 @@
+fastapi
+uvicorn
+jinja2
+python-multipart
+aiohttp
+requests
+sqlmodel
+google-generativeai
+python-dotenv
+apscheduler
+instaloader
+yt-dlp

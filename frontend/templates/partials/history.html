@@ -1,0 +1,26 @@
+<div class="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-700">
+    <div class="flex justify-between items-end">
+        <div>
+            <h2 class="text-3xl font-bold">Analysis History</h2>
+            <p class="text-gray-400 mt-1 uppercase text-[10px] font-bold tracking-widest">Logs of all processed
+                intelligence</p>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4">
+        {% if history %}
+        <!-- List items -->
+        {% else %}
+        <div
+            class="glass p-20 rounded-[2.5rem] border border-white/5 text-center flex flex-col items-center gap-4 opacity-50">
+            <div class="w-16 h-16 rounded-full border border-white/10 flex items-center justify-center">
+                <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
+            <p class="uppercase text-[10px] font-black tracking-widest text-gray-600">No Intelligence history found</p>
+        </div>
+        {% endif %}
+    </div>
+</div>

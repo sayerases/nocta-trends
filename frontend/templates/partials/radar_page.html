@@ -1,0 +1,71 @@
+<!-- Radar Page -->
+<div class="page-title" style="margin-bottom:8px;">Контент-радар</div>
+<div style="color:var(--text-muted); margin-bottom:24px;">Следите за новыми вирусными видео по вашим ключевым словам в
+    реальном времени.</div>
+
+<div style="display:flex; gap:20px; align-items:flex-start;">
+    <!-- Keywords sidebar -->
+    <div
+        style="width:300px; background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:12px; padding:20px;">
+        <h3 style="margin-bottom:16px;">Отслеживаемые слова</h3>
+
+        <div style="display:flex; gap:8px; margin-bottom:16px;">
+            <input type="text" id="radar-input" class="input-field" placeholder="Добавить слово..."
+                style="padding:8px 12px;">
+            <button class="btn btn-primary" onclick="addRadarScore()">+</button>
+        </div>
+
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;">
+            {% for kw in keywords %}
+            <li style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; cursor:pointer;"
+                onclick="loadRadarResults('{{ kw }}')">
+                <span>{{ kw }}</span>
+                <button class="btn" style="padding:4px;"
+                    onclick="event.stopPropagation(); removeRadar('{{ kw }}')">✕</button>
+            </li>
+            {% else %}
+            <li style="color:var(--text-muted); font-size:13px;">Слов пока нет</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Results -->
+    <div style="flex:1;">
+        <div class="filter-bar">
+            <select class="input-field" id="sort-select" style="width:180px;"
+                onchange="if(currentRadarKw) loadRadarResults(currentRadarKw)">
+                <option value="recent">Сначала новые</option>
+                <option value="views">Сначала популярные</option>
+            </select>
+        </div>
+        <div id="video-grid-container"
+            style="min-height:300px; display:flex; align-items:center; justify-content:center;">
+            <p style="color:var(--text-muted);">Выберите слово для просмотра свежих результатов</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentRadarKw = '';
+
+    function addRadarScore() {
+        const kw = document.getElementById('radar-input').value.trim();
+        if (!kw) return;
+        const fd = new FormData(); fd.append("keyword", kw);
+        fetch('/api/radar/add', { method: 'POST', body: fd }).then(() => loadPage('radar'));
+    }
+
+    function removeRadar(kw) {
+        const fd = new FormData(); fd.append("keyword", kw);
+        fetch('/api/radar/remove', { method: 'POST', body: fd }).then(() => loadPage('radar'));
+    }
+
+    function loadRadarResults(kw) {
+        currentRadarKw = kw;
+        const grid = document.getElementById('video-grid-container');
+        grid.innerHTML = '<div class="spinner"></div>';
+        const sort = document.getElementById('sort-select').value;
+        fetch('/api/radar/results?keyword=' + encodeURIComponent(kw) + '&sort_by=' + sort)
+            .then(r => r.text()).then(html => grid.innerHTML = html);
+    }
+</script>

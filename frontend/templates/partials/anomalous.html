@@ -1,0 +1,19 @@
+<!-- Anomalous Page Shell -->
+<div class="filter-bar">
+    <select class="input-field" id="time-select" style="width:180px;" onchange="reloadAnomalousGrid()">
+        <option value="3d">Последние 3 дня</option>
+        <option value="7d">Последние 7 дней</option>
+        <option value="all">За всё время</option>
+    </select>
+    <select class="input-field" id="sort-select" style="width:180px;" onchange="reloadAnomalousGrid()">
+        <option value="anomaly">Макс. виральность</option>
+        <option value="views">Макс. просмотров</option>
+    </select>
+    <button class="btn btn-primary" onclick="reloadAnomalousGrid()">Скан трендов (3 т.)</button>
+    <span style="color:var(--text-muted); font-size:13px; margin-left:10px;">Анализ 10+ случайных хештегов для поиска
+        взлетевших Reels.</span>
+</div>
+
+<div id="video-grid-container">
+    <!-- Grid injected by JS loadAnomalousContent() initially -->
+</div>

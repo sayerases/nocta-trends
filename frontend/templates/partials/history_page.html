@@ -1,0 +1,64 @@
+<!-- History -->
+<div class="filter-bar" style="justify-content:space-between;">
+    <div class="page-title">История поисков</div>
+    <button class="btn" style="color:var(--danger); border-color:var(--danger);" onclick="clearHistory()">
+        Очистить историю
+    </button>
+</div>
+
+{% if not history %}
+<div style="text-align:center; padding:100px 20px;">
+    <div style="font-size:20px; font-weight:600; color:var(--text-muted);">История пуста</div>
+</div>
+{% else %}
+<div style="display:flex; flex-direction:column; gap:16px;">
+    {% for h in history %}
+    <div
+        style="background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:12px; padding:20px; display:flex; align-items:center; justify-content:space-between;">
+
+        <div>
+            <div style="font-size:18px; font-weight:600; margin-bottom:4px;">{{ h.query }}</div>
+            <div style="font-size:13px; color:var(--text-muted);">
+                Найдено {{ h.results_count }} видео • {{ h.searched_at.strftime("%Y-%m-%d %H:%M") }}
+            </div>
+
+            <!-- Previews -->
+            <div style="display:flex; gap:8px; margin-top:12px;">
+                {% for p in h.previews %}
+                {% if p %}
+                <img src="{{ p }}" style="width:40px; height:60px; object-fit:cover; border-radius:6px; opacity:0.8;">
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div>
+            <button class="btn btn-primary" onclick="repeatSearch('{{ h.query|escape }}')">
+                <svg class="icon">
+                    <path
+                        d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" />
+                </svg>
+                Повторить
+            </button>
+        </div>
+
+    </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<script>
+    function clearHistory() {
+        if (confirm("Точно удалить историю?")) {
+            fetch('/api/history/clear', { method: 'DELETE' }).then(() => loadPage('history'));
+        }
+    }
+    function repeatSearch(q) {
+        // Change to search page and execute search immediately
+        loadPage('search');
+        setTimeout(() => {
+            const el = document.getElementById('main-search-input');
+            if (el) { el.value = q; reloadSearchGrid(); }
+        }, 100);
+    }
+</script>

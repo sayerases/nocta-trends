@@ -1,0 +1,98 @@
+<!-- Admin Page -->
+<div class="page-title" style="margin-bottom:24px;">Панель Управления</div>
+
+<div class="admin-stats">
+    <div class="stat-box">
+        <div class="num">{{ total_users }}</div>
+        <div
+            style="color:var(--text-muted); font-size:14px; text-transform:uppercase; letter-spacing:1px; margin-top:8px;">
+            Пользователей</div>
+    </div>
+    <div class="stat-box">
+        <div class="num">{{ total_searches }}</div>
+        <div
+            style="color:var(--text-muted); font-size:14px; text-transform:uppercase; letter-spacing:1px; margin-top:8px;">
+            Запросов к API</div>
+    </div>
+    <div class="stat-box">
+        <div class="num" style="color:var(--success);">ОК</div>
+        <div
+            style="color:var(--text-muted); font-size:14px; text-transform:uppercase; letter-spacing:1px; margin-top:8px;">
+            Статус системы</div>
+    </div>
+</div>
+
+<h3 style="margin-bottom:16px;">Пользователи</h3>
+
+<div class="search-box" style="margin-bottom: 20px; max-width: 400px;">
+    <svg class="icon" style="color:var(--text-muted)">
+        <path
+            d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
+    </svg>
+    <input type="text" id="admin-search" placeholder="Поиск по ID или Email..." onkeyup="filterAdminUsers()">
+</div>
+<table class="users-table">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Имя</th>
+            <th>Роль</th>
+            <th>Токены</th>
+            <th>Регистрация</th>
+            <th>Действия</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for u in users %}
+        <tr>
+            <td>#{{ u.id }}</td>
+            <td>{{ u.email }}</td>
+            <td>{{ u.name }}</td>
+            <td>
+                <span
+                    style="padding:4px 8px; border-radius:4px; font-size:12px; background: {% if u.role == 'admin' %}rgba(139, 92, 246, 0.2){% else %}rgba(255,255,255,0.05){% endif %}; color: {% if u.role == 'admin' %}var(--accent){% else %}var(--text-muted){% endif %};">
+                    {{ u.role|upper }}
+                </span>
+            </td>
+            <td id="tokens-{{ u.id }}">{{ u.tokens }}</td>
+            <td style="color:var(--text-muted);">{{ u.created_at.strftime("%Y-%m-%d %H:%M") if u.created_at else '' }}
+            </td>
+            <td>
+                <button class="btn btn-primary" style="padding:4px 10px; font-size:12px;"
+                    onclick="addTokens({{ u.id }})">+100 т.</button>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<script>
+    function addTokens(userId) {
+        const fd = new FormData();
+        fd.append("user_id", userId);
+        fd.append("amount", 100);
+        fetch("/api/admin/add-tokens", { method: "POST", body: fd })
+            .then(r => r.json())
+            .then(res => {
+                if (res.status === 'ok') {
+                    const el = document.getElementById('tokens-' + userId);
+                    el.innerText = parseInt(el.innerText) + 100;
+                }
+            });
+    }
+
+    function filterAdminUsers() {
+        const term = document.getElementById('admin-search').value.toLowerCase();
+        const rows = document.querySelectorAll('.users-table tbody tr');
+        rows.forEach(row => {
+            const idText = row.cells[0].innerText.toLowerCase();
+            const emailText = row.cells[1].innerText.toLowerCase();
+            if (idText.includes(term) || emailText.includes(term)) {
+                row.style.display = '';
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+</script>

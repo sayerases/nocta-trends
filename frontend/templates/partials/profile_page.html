@@ -1,0 +1,31 @@
+<!-- Profile Analysis -->
+<div class="page-title" style="margin-bottom:8px;">Глубокий Анализ Профиля</div>
+<div style="color:var(--text-muted); margin-bottom:24px;">Введите юзернейм аккаунта Instagram для парсинга последних
+    Reels. Стоимость: 5 токенов.</div>
+
+<div class="search-box" style="margin-bottom:30px;">
+    <svg class="icon" style="color:var(--text-muted)">
+        <path
+            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+    </svg>
+    <input type="text" id="profile-input" placeholder="Например: therock"
+        onkeydown="if(event.key==='Enter') runProfileAnalysis()">
+    <button class="btn btn-primary" style="margin-left:10px;" onclick="runProfileAnalysis()">Анализ (5 т.)</button>
+</div>
+
+<div id="profile-result"></div>
+
+<script>
+    function runProfileAnalysis() {
+        const username = document.getElementById('profile-input').value.trim();
+        if (!username) return;
+
+        const container = document.getElementById('profile-result');
+        container.innerHTML = '<div style="text-align:center; padding:40px;"><div class="spinner" style="margin:0 auto;"></div><div style="margin-top:16px;">Сканируем профиль @' + username + '...</div></div>';
+
+        const fd = new FormData(); fd.append("username", username);
+        fetch('/api/analyze-profile', { method: 'POST', body: fd })
+            .then(r => r.text())
+            .then(html => { container.innerHTML = html; });
+    }
+</script>

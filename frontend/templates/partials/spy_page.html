@@ -1,0 +1,70 @@
+<!-- Spy Page -->
+<div class="page-title" style="margin-bottom:8px;">Шпионаж Конкурентов</div>
+<div style="color:var(--text-muted); margin-bottom:24px;">Анализируйте контент-стратегию конкретных аккаунтов. Добавьте
+    юзернеймы для слежки.</div>
+
+<div style="display:flex; gap:20px; align-items:flex-start;">
+    <!-- Accounts sidebar -->
+    <div
+        style="width:300px; background:var(--panel-bg); border:1px solid var(--panel-border); border-radius:12px; padding:20px;">
+        <h3 style="margin-bottom:16px;">Отслеживаемые аккаунты</h3>
+
+        <div style="display:flex; gap:8px; margin-bottom:16px;">
+            <input type="text" id="spy-input" class="input-field" placeholder="username..." style="padding:8px 12px;">
+            <button class="btn btn-primary" onclick="addSpyAccount()">+</button>
+        </div>
+
+        <ul style="list-style:none; padding:0; display:flex; flex-direction:column; gap:8px;">
+            {% for acc in accounts %}
+            <li style="display:flex; justify-content:space-between; align-items:center; background:rgba(255,255,255,0.05); padding:8px 12px; border-radius:8px; cursor:pointer;"
+                onclick="loadSpyResults('{{ acc }}')">
+                <span>@{{ acc }}</span>
+                <button class="btn" style="padding:4px;"
+                    onclick="event.stopPropagation(); removeSpy('{{ acc }}')">✕</button>
+            </li>
+            {% else %}
+            <li style="color:var(--text-muted); font-size:13px;">Аккаунтов пока нет</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <!-- Results -->
+    <div style="flex:1;">
+        <div class="filter-bar">
+            <select class="input-field" id="spy-sort-select" style="width:180px;"
+                onchange="if(currentSpyAcc) loadSpyResults(currentSpyAcc)">
+                <option value="recent">Свежие видео</option>
+                <option value="views">Самые популярные</option>
+                <option value="er">Топ по вовлеченности</option>
+            </select>
+        </div>
+        <div id="spy-video-grid" style="min-height:300px; display:flex; align-items:center; justify-content:center;">
+            <p style="color:var(--text-muted);">Выберите аккаунт для загрузки его Reels</p>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentSpyAcc = '';
+
+    function addSpyAccount() {
+        const acc = document.getElementById('spy-input').value.trim();
+        if (!acc) return;
+        const fd = new FormData(); fd.append("username", acc);
+        fetch('/api/spy/add', { method: 'POST', body: fd }).then(() => loadPage('spy'));
+    }
+
+    function removeSpy(acc) {
+        const fd = new FormData(); fd.append("username", acc);
+        fetch('/api/spy/remove', { method: 'POST', body: fd }).then(() => loadPage('spy'));
+    }
+
+    function loadSpyResults(acc) {
+        currentSpyAcc = acc;
+        const grid = document.getElementById('spy-video-grid');
+        grid.innerHTML = '<div class="spinner"></div>';
+        const sort = document.getElementById('spy-sort-select').value;
+        fetch('/api/spy/results?username=' + encodeURIComponent(acc) + '&sort_by=' + sort)
+            .then(r => r.text()).then(html => grid.innerHTML = html);
+    }
+</script>

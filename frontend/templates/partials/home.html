@@ -1,0 +1,21 @@
+<!-- Home Page Shell -->
+<div class="filter-bar"
+    style="background:var(--panel-bg); border:1px solid var(--panel-border); padding:20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center;">
+    <div>
+        <h2 style="font-size:18px; font-weight:600; margin-bottom:4px;">🔥 Персональная лента Идей</h2>
+        <p style="font-size:13px; color:var(--text-muted);">Вирусные ролики, собранные нейросетью из 20+ ниш.</p>
+    </div>
+    <div style="text-align:right;">
+        <button class="btn btn-primary" onclick="loadHomeContent()">
+            <svg class="icon">
+                <path
+                    d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z" />
+            </svg>
+            Обновить алгоритм
+        </button>
+    </div>
+</div>
+
+<div id="video-grid-container">
+    <!-- Grid injected by JS loadHomeContent() initially -->
+</div>

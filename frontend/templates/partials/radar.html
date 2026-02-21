@@ -1,0 +1,43 @@
+<div class="space-y-6">
+    <div class="flex justify-between items-center">
+        <div>
+            <h2 class="text-3xl font-bold">Content Radar</h2>
+            <p class="text-gray-400 mt-1">Automatic monitoring for your target keywords.</p>
+        </div>
+        <button class="bg-neon-orange hover:bg-orange-600 px-4 py-2 rounded-lg font-semibold transition-colors"
+            onclick="alert('Keyword management dashboard is under construction.')">
+            Manage Keywords
+        </button>
+    </div>
+
+    <div id="radar-content" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- Anomalous Growth Cards -->
+        <div class="col-span-full">
+            <h3 class="text-white/60 uppercase text-xs font-bold tracking-widest mb-4">Anomalous Growth Detected</h3>
+            <div class="space-y-4">
+                {% for video in anomalous_videos %}
+                <div
+                    class="bg-gray-900 border-l-4 border-neon-orange p-4 rounded-r-xl flex items-center justify-between">
+                    <div class="flex items-center gap-4">
+                        <img src="{{ video.thumbnail_url }}" class="w-12 h-16 object-cover rounded shadow" alt="">
+                        <div>
+                            <p class="font-bold text-sm">{{ video.title }}</p>
+                            <p class="text-xs text-gray-500">@{{ video.author }} • {{ video.platform }}</p>
+                        </div>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-neon-orange font-mono font-bold">+{{ video.engagement_rate }}% ER</p>
+                        <button
+                            class="text-[10px] bg-gray-800 px-2 py-1 rounded mt-1 hover:bg-neon-purple transition-colors"
+                            hx-post="/api/analyze"
+                            hx-vals='{"video_id": "{{ video.platform_id }}", "platform": "{{ video.platform }}"}'
+                            hx-target="#modal-container">
+                            Analyze Why
+                        </button>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,58 @@
+<!-- Profile Analysis Result -->
+<div class="profile-result-header">
+    <div class="profile-avatar-lg">{{ (username or '?')[0].upper() }}</div>
+    <div>
+        <div style="font-size:18px;font-weight:700;">@{{ username }}</div>
+        <div style="font-size:13px;color:var(--text-muted);">Instagram профиль</div>
+    </div>
+    <div class="profile-stats" style="margin-left:auto;">
+        <div class="profile-stat">
+            <div class="s-value">{{ video_count }}</div>
+            <div class="s-label">Видео</div>
+        </div>
+        <div class="profile-stat">
+            <div class="s-value">{{ "{:,}".format(total_views | int) }}</div>
+            <div class="s-label">Просмотры</div>
+        </div>
+        <div class="profile-stat">
+            <div class="s-value">{{ avg_er }}%</div>
+            <div class="s-label">Средний ER</div>
+        </div>
+    </div>
+</div>
+
+<div class="page-subtitle">Последние Reels профиля</div>
+
+<div class="video-grid">
+    {% for v in videos %}
+    <div class="video-card" onclick='openVideoModal({{ v | tojson }})'>
+        <div class="card-thumb">
+            {% if v.thumbnail_url %}
+            <img src="{{ v.thumbnail_url }}" alt="thumb" loading="lazy">
+            {% else %}
+            <div class="no-thumb">🎬</div>
+            {% endif %}
+            <div class="card-platform-badge badge-reels">● REELS</div>
+            <div class="card-stats-overlay">
+                <div class="card-stat"><span class="icon">👁️</span>{{ v.views | int if v.views else 0 }}</div>
+                <div class="card-stat"><span class="icon">❤️</span>{{ v.likes | int if v.likes else 0 }}</div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="card-author-row">
+                <div class="card-author-avatar">{{ (v.author or username or '?')[0].upper() }}</div>
+                <div class="card-username">@{{ v.author or username }}</div>
+                {% if v.engagement_rate %}
+                <div style="font-size:11px;color:var(--purple);font-weight:600;margin-left:auto;">ER {{
+                    v.engagement_rate }}%</div>
+                {% endif %}
+            </div>
+            {% if v.title %}
+            <div class="card-caption">{{ v.title[:80] }}</div>
+            {% endif %}
+            <button class="card-analyze-btn" onclick="event.stopPropagation(); openVideoModal({{ v | tojson }})">Анализ
+                видео</button>
+        </div>
+    </div>
+    {% endfor %}
+</div>
