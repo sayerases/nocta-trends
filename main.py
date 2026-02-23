@@ -144,7 +144,7 @@ async def search(
     if not q:
         ctx = get_auth_context(request, user)
         ctx.update({"videos": [], "page": page, "section": "search", "empty_msg": "Введите запрос для поиска"})
-        return templates.TemplateResponse("partials/search_view.html", ctx)
+        return templates.TemplateResponse("partials/search_view.html" if page == 1 else "partials/video_grid.html", ctx)
         
     cache_key = f"search_{q}_{timeframe}_{sort_by}_p{page}"
     videos = app_cache.get(cache_key)
@@ -161,8 +161,14 @@ async def search(
             auth.deduct_tokens(user, 2, db)
             db.commit()
 
+    # Pagination slicing (12 per page)
+    per_page = 12
+    start_idx = (page - 1) * per_page
+    end_idx = start_idx + per_page
+    paginated_videos = videos[start_idx:end_idx]
+
     ctx = get_auth_context(request, user)
-    ctx.update({"videos": videos, "page": page, "section": "search", "query": q})
+    ctx.update({"videos": paginated_videos, "page": page, "section": "search", "query": q})
     return templates.TemplateResponse("partials/search_view.html" if page == 1 else "partials/video_grid.html", ctx)
 
 # --- Anomalous Videos (Аномальные видео) ---
@@ -199,8 +205,14 @@ async def anomalous(
         app_cache.set(cache_key, videos, ttl_seconds=600)
         auth.deduct_tokens(user, 3, db) # Anomalous scan is expensive
 
+    # Pagination slicing (12 per page)
+    per_page = 12
+    start_idx = (page - 1) * per_page
+    end_idx = start_idx + per_page
+    paginated_videos = videos[start_idx:end_idx]
+
     ctx = get_auth_context(request, user)
-    ctx.update({"videos": videos, "page": page, "section": "anomalous"})
+    ctx.update({"videos": paginated_videos, "page": page, "section": "anomalous"})
     return templates.TemplateResponse("partials/video_grid.html", ctx)
 
 # --- Profile Analysis ---
