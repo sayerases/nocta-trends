@@ -79,6 +79,15 @@ def _is_within_timeframe(taken_at: Optional[int], days: Optional[int]) -> bool:
     except Exception:
         return True
 
+def extract_timestamp_from_pk(pk_str: str) -> Optional[int]:
+    try:
+        # Instagram standard 64-bit ID. Bits 63:23 represent milliseconds since Insta epoch
+        pk_int = int(str(pk_str).split("_")[0])
+        ts_ms = (pk_int >> 23) + 1314220021000
+        return int(ts_ms / 1000)
+    except Exception:
+        return None
+
 def fetch_reels_from_account_sync(username: str, timeframe_days: Optional[int]) -> List[Dict[str, Any]]:
     """Fetch reels for a single account synchronously."""
     results = []
@@ -107,7 +116,13 @@ def fetch_reels_from_account_sync(username: str, timeframe_days: Optional[int]) 
             if not isinstance(item, dict):
                 continue
                 
+            pk_val = item.get("pk") or item.get("id", "")
             taken_at = item.get("taken_at") or item.get("takenAt") or item.get("device_timestamp")
+            
+            # If the API drops the date, reverse engineer it from the media ID (PK)
+            if not taken_at and pk_val:
+                taken_at = extract_timestamp_from_pk(pk_val)
+
             if not _is_within_timeframe(taken_at, timeframe_days):
                 continue
 
