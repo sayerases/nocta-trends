@@ -336,7 +336,10 @@
                 if (entries[0].isIntersecting && !isLoading) {
                     loadMoreContent();
                 }
-            }, { rootMargin: '200px' });
+            }, {
+                root: document.getElementById('content-area'),
+                rootMargin: '200px'
+            });
 
             scrollObserver.observe(sentinel);
         }
