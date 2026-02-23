@@ -8,13 +8,13 @@
         <input type="text" id="main-search-input" placeholder="Введите запрос или хештег..." value="{{ query or '' }}"
             onkeydown="if(event.key==='Enter') reloadSearchGrid()">
     </div>
-    <select class="input-field" id="time-select" style="width:180px;" onchange="reloadSearchGrid()">
+    <select class="input-field" id="time-select" style="width:180px;">
         <option value="all">За всё время</option>
         <option value="7d">Последние 7 дней</option>
         <option value="3d">Последние 3 дня</option>
         <option value="1d">Последние 24 часа</option>
     </select>
-    <select class="input-field" id="sort-select" style="width:180px;" onchange="reloadSearchGrid()">
+    <select class="input-field" id="sort-select" style="width:180px;">
         <option value="views">По просмотрам</option>
         <option value="likes">По лайкам</option>
         <option value="er">По ER (вовлеченность)</option>

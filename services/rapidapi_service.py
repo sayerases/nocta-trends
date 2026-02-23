@@ -29,7 +29,11 @@ HASHTAG_TO_ACCOUNTS = {
     "finance": ["wsj", "bloomberg", "investopedia", "cnbc", "financialtimes", "yahoo_finance"],
     # Art / Creative
     "art": ["art", "artist", "drawing", "painting", "procreate", "digitalart", "artstationhq", "dailyart"],
-    "design": ["designboom", "dezeen", "archdigest", "interiordesign", "graphicdesign", "logodesign"],
+    "design": ["designboom", "dezeen", "archdigest", "interiordesign", "graphicdesign", "logodesign", "designtip", "theprospectz"],
+    "motion": ["motiondesigners", "motiongraphics_p", "mgcollective", "mdcommunity", "motionmate", "plsur", "xuxoe", "buck_design", "thepixellab"],
+    "vfx": ["vfxexpress", "corridordigital", "pwnisher", "vfxguru", "vfxmag", "cgarts", "renderzone"],
+    "3d": ["blender.daily", "cinema4d", "dailyart", "cgsociety", "3dtotal", "octanerender", "maxon", "blender.community"],
+    "animation": ["animation_station", "loishh", "animator.community", "pudding.animation"],
     # Gaming / Entertainment
     "gaming": ["ign", "gamespot", "polygon", "kotaku", "gamer", "gaming", "playstation", "xbox", "nintendo"],
     # Tech / Future

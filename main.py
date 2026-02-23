@@ -146,20 +146,31 @@ async def search(
         ctx.update({"videos": [], "page": page, "section": "search", "empty_msg": "Введите запрос для поиска"})
         return templates.TemplateResponse("partials/search_view.html" if page == 1 else "partials/video_grid.html", ctx)
         
-    cache_key = f"search_{q}_{timeframe}_{sort_by}_p{page}"
+    cache_key = f"search_{q}_{timeframe}_master"
     videos = app_cache.get(cache_key)
     
     if not videos:
-        videos = await social_api.search_trends(q, timeframe, sort_by)
+        # Fetch unsorted base results and cache
+        videos = await social_api.search_trends(q, timeframe, "views")
         app_cache.set(cache_key, videos, ttl_seconds=300) # Cache 5 mins
         
-        # Log to DB history & deduct 2 tokens for a search
+        # Log to DB history & deduct 2 tokens for a search only on new fetch
         if videos and page == 1:
             previews = json.dumps([v.get("thumbnail_url") for v in videos[:4]])
             history = SearchHistory(user_id=user.id, query=q, results_count=len(videos), preview_thumbnails=previews)
             db.add(history)
             auth.deduct_tokens(user, 2, db)
             db.commit()
+
+    # Sort the massive cached list on the fly based on user selection
+    if sort_by == "views":
+        videos.sort(key=lambda x: x.get("views", 0) or 0, reverse=True)
+    elif sort_by == "er":
+        videos.sort(key=lambda x: x.get("engagement_rate", 0) or 0, reverse=True)
+    elif sort_by == "likes":
+        videos.sort(key=lambda x: x.get("likes", 0) or 0, reverse=True)
+    elif sort_by == "recent":
+        videos.sort(key=lambda x: x.get("published_at", "") or "", reverse=True)
 
     # Pagination slicing (12 per page)
     per_page = 12
