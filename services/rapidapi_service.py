@@ -56,7 +56,7 @@ HASHTAG_TO_ACCOUNTS = {
     "default": ["instagram", "creators", "9gag", "pubity", "complex", "meme", "viral", "trending", "tiktok", "reels", "funny", "comedy", "lmao", "epic", "wow"],
 }
 
-def _pick_accounts(query: str, max_accounts=15) -> List[str]:
+def _pick_accounts(query: str, max_accounts=2) -> List[str]:
     """Pick up to max_accounts seed accounts based on the search query."""
     q = query.lower().replace("#", "").strip()
     accounts = []
